@@ -36,7 +36,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",        # React dev
         "http://localhost:5173",        # Vite dev
-        "https://edtech-tunisia.vercel.app",  # Production
+        "https://edtech-frontend-dun.vercel.app",  # Production
     ],
     allow_credentials=True,
     allow_methods=["*"],
