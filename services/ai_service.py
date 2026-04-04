@@ -68,12 +68,13 @@ CURRICULUM_CONTEXT = {
 # ══════════════════════════════════════════════════════════════
 #  CALL AI — الاستدعاء الموحّد
 # ══════════════════════════════════════════════════════════════
-async def call_ai(system: str, user: str) -> str:
+async def call_ai(system: str, user: str, max_tokens: int = 1500) -> str:
     headers = {
         "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
         "HTTP-Referer": "http://localhost:3000",
         "X-Title": "EdTech Tunisia",
+        
     }
     payload = {
         "model": settings.AI_MODEL,
@@ -81,7 +82,7 @@ async def call_ai(system: str, user: str) -> str:
             {"role": "system", "content": system},
             {"role": "user",   "content": user},
         ],
-        "max_tokens": 2000,
+        "max_tokens": max_tokens,
         "temperature": 0.7,
         "response_format": {"type": "json_object"},
     }
@@ -239,7 +240,7 @@ async def generate_game(
 
 تذكر: {num_questions} أسئلة بالضبط في مصفوفة questions."""
 
-    text = await call_ai(MASTER_SYSTEM_PROMPT, prompt)
+    text = await call_ai(MASTER_SYSTEM_PROMPT, prompt, max_tokens=2000)
     data = json.loads(text)
 
     # إصلاح وضمان الجودة
@@ -336,7 +337,7 @@ async def generate_worksheet(
   ]
 }}"""
 
-    text = await call_ai(MASTER_SYSTEM_PROMPT, prompt)
+    text = await call_ai(MASTER_SYSTEM_PROMPT, prompt, max_tokens=4000)
     return json.loads(text)
 
 
@@ -374,7 +375,7 @@ async def analyze_student(student_name: str, sessions_data: list) -> dict:
 
     text = await call_ai(
         "أنت مستشار تربوي متخصص في المنهج التونسي. أعد JSON فقط.",
-        prompt
+        prompt, max_tokens=800
     )
     return json.loads(text)
 
